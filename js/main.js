@@ -1,10 +1,11 @@
 // GLOBAL VARS
-const genres = [];
+const languages = [];
+const countries = [];
 const watchlist =  [];
 
 // PAGINATION
 let TOTAL_RESULTS = 10;
-let PER_PAGE_COUNT = 8;
+let PER_PAGE_COUNT = 9;
 let PAGE_LINKS_TO_SHOW = 5;
 let NEIGHBOUR_PAGES_COUNT = Math.floor(PAGE_LINKS_TO_SHOW / 2);
 let CURRENT_PAGE = 1;
@@ -15,6 +16,8 @@ let foundBooks = books;
 // SEARCH FORM
 const elBooksSearchForm = document.querySelector('.js-books-search-form');
 const elBookSearchInput = elBooksSearchForm.querySelector('.js-book-search-input');
+const elLanguageSelect = elBooksSearchForm.querySelector('.js-language-select');
+const elCountrySelect = elBooksSearchForm.querySelector('.js-country-select');
 const elPagesInput = elBooksSearchForm.querySelector('.js-pages-input');
 const elMinYearInput = elBooksSearchForm.querySelector('.js-start-year-input');
 const elSortSelect = elBooksSearchForm.querySelector('.js-sort-select');
@@ -37,6 +40,53 @@ const elPaginationItemTemplate = document.querySelector('#pagination-item-templa
 const elWatchlistModal = document.querySelector('.watchlist-modal');
 const elWatchlistGroup = elWatchlistModal.querySelector('.watchlist-modal__list');
 const watchlistFragment = document.createDocumentFragment();
+
+
+function showLanguageOptions() {
+  let languaged = [];
+  foundBooks.forEach(book => {
+    languaged.push(book.language);
+    languaged.forEach(lang => {
+      console.log(lang);
+      if (!languages.includes(lang)) {
+        languages.push(lang);
+      }
+    });
+  });
+  languages.sort();
+
+  const elLanguageFragment = document.createDocumentFragment();
+  languages.forEach(languages => {
+    const elLanguageOption = document.createElement('option');
+    elLanguageOption.textContent = languages;
+    elLanguageOption.value = languages;
+    elLanguageFragment.appendChild(elLanguageOption);
+  });
+  elLanguageSelect.appendChild(elLanguageFragment);
+};
+
+function showCountryOptions() {
+  let country = [];
+  foundBooks.forEach(book => {
+    country.push(book.country);
+    country.forEach(count => {
+      console.log(count);
+      if (!countries.includes(count)) {
+        countries.push(count);
+      }
+    });
+  });
+  countries.sort();
+
+  const elCountryFragment = document.createDocumentFragment();
+  countries.forEach(country => {
+    const elCountryOption = document.createElement('option');
+    elCountryOption.textContent = country;
+    elCountryOption.value = country;
+    elCountryFragment.appendChild(elCountryOption);
+  });
+  elCountrySelect.appendChild(elCountryFragment);
+}
 
 function showBooks (books, titleRegex = '') {
   elBooksList.innerHTML = '';
@@ -62,7 +112,7 @@ function showBooks (books, titleRegex = '') {
 
 function findBooks (titleRegex) {
   let res =  books.filter(book => {
-    const Criteria = (book.title.match(titleRegex) || (elBookSearchInput.value === '')) && (elMinYearInput.value.trim() === '' || book.year >= Number(elMinYearInput.value)) && (elPagesInput.value.trim() === '' || book.pages >= Number(elPagesInput.value));
+    const Criteria = (book.title.match(titleRegex) || (elBookSearchInput.value === '')) && (elMinYearInput.value.trim() === '' || book.year >= Number(elMinYearInput.value)) && (elLanguageSelect.value === 'All' || book.language.includes(elLanguageSelect.value)) && (elCountrySelect.value === 'All' || book.country.includes(elCountrySelect.value));
     return Criteria;
   });
   return res;
@@ -210,7 +260,7 @@ function onBooksListInfoButtonClick(evt) {
       elBookmarkButton.classList.remove('btn-primary');
       elBookmarkButton.classList.add('btn-outline-primary');
       
-      let bookmarkIndex = watchlist.findIndex(book => book.title === elBookmarkButton.dataset.title);
+      const bookmarkIndex = watchlist.findIndex(book => book.title === elBookmarkButton.dataset.title);
       watchlist.splice(bookmarkIndex, 1);
       console.log(watchlist);
     }
@@ -219,7 +269,7 @@ function onBooksListInfoButtonClick(evt) {
       elBookmarkButton.classList.remove('btn-outline-primary');
       elBookmarkButton.classList.add('btn-primary');
 
-      let newBookmark = books.find(book => book.title === elBookmarkButton.dataset.title);
+      const newBookmark = books.find(book => book.title === elBookmarkButton.dataset.title);
       watchlist.push(newBookmark);
       console.log(watchlist);
     }
@@ -249,8 +299,9 @@ elWatchlistModal.addEventListener('show.bs.modal', showWatchlist);
 elWatchlistModal.addEventListener('click', (e) => {
   if (e.target.matches('.js-watchlist-close')) {
     const bookmarkIndex = watchlist.findIndex(bookmark => bookmark.title === e.target.dataset.title);
-    const removedBookmark = watchlist.splice(bookmarkIndex, 1);
-
+    // const removedBookmark = watchlist.splice(bookmarkIndex, 1);
+    // const bookmarkInde = watchlist.findIndex(book => book.title === e.target.dataset.title);
+    watchlist.splice(bookmarkIndex, 1);
     // const elBookmark = elMoviesList.querySelector(`.js-watchlist-close[data-page="${removedBookmark.title}"]`);
     // elBookmark.textContent = 'Bookmark';
     // elBookmark.classList.remove('btn-primary');
@@ -294,5 +345,8 @@ if (elPaginationList) {
   });
 }
 
+
+showLanguageOptions();
+showCountryOptions();
 showBooks(foundBooks, '');
 showPagination();
