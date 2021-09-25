@@ -252,32 +252,6 @@ function onMovieSearchFormSubmit (evt) {
   }
 }
 
-function onBooksListInfoButtonClick(evt) {
-  if (evt.target.matches('.js-bookmark-button')) {
-    const elBookmarkButton = evt.target;
-    if (elBookmarkButton.matches('.btn-primary')) {
-      elBookmarkButton.textContent = 'Bookmark';
-      elBookmarkButton.classList.remove('btn-primary');
-      elBookmarkButton.classList.add('btn-outline-primary');
-      
-      const bookmarkIndex = watchlist.findIndex(book => book.title === elBookmarkButton.dataset.title);
-      watchlist.splice(bookmarkIndex, 1);
-      console.log(watchlist);
-    }
-    else {
-      elBookmarkButton.textContent = 'Bookmarked ✅';
-      elBookmarkButton.classList.remove('btn-outline-primary');
-      elBookmarkButton.classList.add('btn-primary');
-
-      const newBookmark = books.find(book => book.title === elBookmarkButton.dataset.title);
-      watchlist.push(newBookmark);
-      console.log(watchlist);
-    }
-
-    localStorage.setItem('watchlist', JSON.stringify(watchlist));
-  }
-}
-
 function showWatchlist() {
   elWatchlistGroup.innerHTML = '';
   let elBookmarksFragment = document.createDocumentFragment();
@@ -287,7 +261,7 @@ function showWatchlist() {
     elNewBookmarksItem.querySelector(".js-watchlist-link").textContent = bookmark.title;
     elNewBookmarksItem.querySelector(".js-watchlist-link").href = bookmark.link;
     elNewBookmarksItem.querySelector(".js-watchlist-year").textContent = bookmark.year;
-    elNewBookmarksItem.querySelector(".js-watchlist-close").dataset.imdbId = bookmark.title;
+    elNewBookmarksItem.querySelector(".js-watchlist-close").dataset.title = bookmark.title;
 
     elBookmarksFragment.appendChild(elNewBookmarksItem);
   }
@@ -295,23 +269,48 @@ function showWatchlist() {
 }
 
 elWatchlistModal.addEventListener('show.bs.modal', showWatchlist);
+elWatchlistModal.addEventListener('hidden.bs.modal', showPagination);
 
-elWatchlistModal.addEventListener('click', (e) => {
-  if (e.target.matches('.js-watchlist-close')) {
-    const bookmarkIndex = watchlist.findIndex(bookmark => bookmark.title === e.target.dataset.title);
-    // const removedBookmark = watchlist.splice(bookmarkIndex, 1);
-    // const bookmarkInde = watchlist.findIndex(book => book.title === e.target.dataset.title);
+elWatchlistModal.addEventListener('click', (evt) => {
+  if (evt.target.matches('.js-watchlist-close')) {
+    const bookmarkIndex = watchlist.findIndex(bookmark => bookmark.title === evt.target.dataset.title);
     watchlist.splice(bookmarkIndex, 1);
-    // const elBookmark = elMoviesList.querySelector(`.js-watchlist-close[data-page="${removedBookmark.title}"]`);
-    // elBookmark.textContent = 'Bookmark';
-    // elBookmark.classList.remove('btn-primary');
-    // elBookmark.classList.add('btn-outline-primary');
-    // watchlist.splice(elBookmark, 1);
-    
+    console.log(watchlist);
+
+    const elBookmark = elBooksList.querySelector('.js-bookmark-button');
+
+    elBookmark.textContent = 'Bookmark';
+    elBookmark.classList.remove('bookmark-btn');
+
+
     localStorage.setItem('watchlist', JSON.stringify(watchlist));
     showWatchlist();
   }
 });
+
+function onBooksListInfoButtonClick(evt) {
+  if (evt.target.matches('.js-bookmark-button')) {
+    const elBookmarkButton = evt.target;
+    if (elBookmarkButton.matches('.bookmark-btn')) {
+      elBookmarkButton.textContent = 'Bookmark';
+      elBookmarkButton.classList.remove('bookmark-btn');
+
+      const bookmarkIndex = watchlist.findIndex(book => book.title === elBookmarkButton.dataset.title);
+      watchlist.splice(bookmarkIndex, 1);
+      console.log(watchlist);
+    }
+    else {
+      elBookmarkButton.textContent = 'Bookmarked';
+      elBookmarkButton.classList.add('bookmark-btn');
+
+      const newBookmark = books.find(book => book.title === elBookmarkButton.dataset.title);
+      watchlist.push(newBookmark);
+      console.log(watchlist);
+    }
+
+    localStorage.setItem('watchlist', JSON.stringify(watchlist));
+  }
+}
 
 if (elBooksList) {
   elBooksList.addEventListener('click', onBooksListInfoButtonClick);
