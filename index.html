@@ -6,27 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Books</title>
   <link rel="stylesheet" href="css/bootstrap.min.css">
-  <style>
-    body {
-      background-color: rgba(74, 24, 211, 0.5);
-    }
-
-    .header {
-      background-color: rgb(137, 0, 155);
-    }
-
-    .movie__img {
-      object-fit: cover;
-    }
-
-    .js-bookmark-button::after {
-      content: '';
-      background-image: url(images/bookmark-no-check.svg);
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: contain;
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -122,8 +102,10 @@
   <!-- TEMPLATES -->
   <template id="book-item-template">
     <div class="books__item col-sm-6 col-md-4 mb-4">
-      <div class="book card h-100">
-        <img class="book__img card-img-top" src="https://picsum.photos/300/170" alt="rasm" width="300" height="500">
+      <div class="book card h-100 book-cards">
+        <div class="d-flex align-items-center justify-content-center pt-3">
+          <img class="book__img card-img-top" src="https://picsum.photos/300/170" alt="rasm" width="300" height="500">
+        </div>
         <div class="card-body d-flex flex-column">
           <h3 class="book__title h5 mb-2 card-title">Books title</h3>
           <div class="d-flex flex-wrap justify-content-between mb-2 small">

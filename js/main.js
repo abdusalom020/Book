@@ -274,11 +274,9 @@ elWatchlistModal.addEventListener('hidden.bs.modal', showPagination);
 elWatchlistModal.addEventListener('click', (evt) => {
   if (evt.target.matches('.js-watchlist-close')) {
     const bookmarkIndex = watchlist.findIndex(bookmark => bookmark.title === evt.target.dataset.title);
-    watchlist.splice(bookmarkIndex, 1);
-    console.log(watchlist);
-
     const elBookmark = elBooksList.querySelector('.js-bookmark-button');
-
+    
+    watchlist.splice(bookmarkIndex, 1);
     elBookmark.textContent = 'Bookmark';
     elBookmark.classList.remove('bookmark-btn');
 
@@ -297,7 +295,6 @@ function onBooksListInfoButtonClick(evt) {
 
       const bookmarkIndex = watchlist.findIndex(book => book.title === elBookmarkButton.dataset.title);
       watchlist.splice(bookmarkIndex, 1);
-      console.log(watchlist);
     }
     else {
       elBookmarkButton.textContent = 'Bookmarked';
@@ -305,7 +302,6 @@ function onBooksListInfoButtonClick(evt) {
 
       const newBookmark = books.find(book => book.title === elBookmarkButton.dataset.title);
       watchlist.push(newBookmark);
-      console.log(watchlist);
     }
 
     localStorage.setItem('watchlist', JSON.stringify(watchlist));

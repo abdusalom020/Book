@@ -1,0 +1,36 @@
+body {
+  background-color: rgba(74, 24, 211, 0.5);
+}
+
+.header {
+  background-color: rgb(137, 0, 155);
+}
+
+.movie__img {
+  object-fit: cover;
+}
+
+.js-bookmark-button::after {
+  content: '';
+  background-image: url(../images/bookmark-no-check.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.book-cards {
+  background-color: rgb(137, 162, 245);
+}
+
+.bookmark-btn.js-bookmark-button::after {
+  content: '';
+  background-image: url(../images/bookmark-check.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.book__img {
+  width: 250px;
+  height: 350px;
+}
